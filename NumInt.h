@@ -12,3 +12,5 @@ void throttle_control(double * CurSt, double * diff, double T,double err);
 void sat_expr(double * CurSt, double * diff, double * param);
 
 void exe_expr(double * CurSt, double * diff, double * param);
+
+double error(double, double);

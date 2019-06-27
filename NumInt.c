@@ -54,7 +54,7 @@ void throttle_control(double * CurSt, double * diff, double T, double err)
 void sat_expr(double * CurSt, double * diff, double * param)
 {
   double Kp = param[0],Ki = param[1], Kd = param[2], Theta_C = param[3];
-  double err = Theta_C - CurSt[0];
+  double err = error(Theta_C, CurSt[0]);
   double disturb = param[4]!=0 ? 0.1*cos(param[5]) : param[4];
   double u = Kp * err - Kd * CurSt[3] + Ki * CurSt[6];
   if (u > 0.14) {
@@ -94,4 +94,15 @@ void exe_expr(double * CurSt, double * diff, double * param)
   diff[4] = -5.40675214e-01*CurSt[1] - 4.51282051e-01*CurSt[2] - 7.72393162e-03*CurSt[4] - 1.12820513e-03*CurSt[5] - 0.09401709*T;
   diff[5] = -1.38205128e-02*CurSt[1] - 1.61230769e+01*CurSt[2] - 1.97435897e-04*CurSt[4] - 4.03076923e-02*CurSt[5] - 0.02564103*T;
   diff[6] = fabs(CurSt[6])>523.6?0:Ang_Acc;
+}
+
+double error(double dest, double cur)
+{
+    const double pi = 3.1415926535;
+    double c,d,e;
+    c = floor(fabs((dest - cur)/2/pi));
+    d = dest > cur ? (dest - cur) - c*2*pi : (dest - cur) + c*2*pi;
+    c = floor(fabs(d/pi));
+    e = d > 0 ? d - 2*c*pi : d + 2*c*pi;
+    return e;
 }
